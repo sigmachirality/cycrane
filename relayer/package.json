@@ -1,5 +1,4 @@
 {
-  "type": "module",
   "scripts": {
     "generate-input": "yarn tsx scripts/generateWitness.ts",
     "build": "mkdir -p build && circom circuits/cycrane.circom --r1cs --wasm --sym -l ./node_modules -o ./build",

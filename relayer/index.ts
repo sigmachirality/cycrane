@@ -29,10 +29,6 @@ async function handleNewEmails() {
 						chunks.push(chunk);
 					});
 
-					stream.on('buffer', (data) => {
-						console.log(data.toString());
-					});
-
 					stream.on('end', () => {
 						// Parse the raw EML content and perform DKIM verification here
 						// You can use the "mailparser" library to parse the email
@@ -43,8 +39,7 @@ async function handleNewEmails() {
 						// const parsedEmail = await simpleParser(rawEml);
 						// Perform DKIM verification on parsedEmail
 			
-						console.log('New Email Received:');
-						console.log(Buffer.concat(chunks).toString());
+						console.log('New Email Received: \n' + Buffer.concat(chunks).toString());
 					  });
 				});
 

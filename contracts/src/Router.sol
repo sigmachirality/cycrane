@@ -14,6 +14,12 @@ contract Router {
         uint256 nonce;
     }
 
+    address verifier;
+
+    constructor(address _verifier) {
+        verifier =_verifier;
+    }
+
     mapping (bytes32 => address) public wallets;
 
     function call(
@@ -56,6 +62,8 @@ contract Router {
             }
 
             wallets[emailHash] = contractAddress;
+
+            BaseWallet(contractAddress).initialize(address(verifier));
 
             wallet = contractAddress;
         }

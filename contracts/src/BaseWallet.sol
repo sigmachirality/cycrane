@@ -20,9 +20,11 @@ contract BaseWallet {
         uint256[2][2] memory b,
         uint256[2] memory c,
         // msg len
-        uint256[8] memory signals
+        uint256[1536] memory signals
     ) public returns(bytes memory) {
         require(_prove(a,b,c,signals), "invalid_proof");
+
+
         
         bytes memory returnValue = _singleCall(info);
 
@@ -33,7 +35,7 @@ contract BaseWallet {
 
 
 
-    function _getInfo(uint256[8] memory signals) internal pure returns (Router.TxInfo memory) {
+    function _getInfo(uint256[1536] memory signals) internal pure returns (Router.TxInfo memory) {
         Router.TxInfo memory info;
 
         // TODO!
@@ -48,7 +50,7 @@ contract BaseWallet {
         uint256[2][2] memory b,
         uint256[2] memory c,
         // msg len
-        uint256[8] memory signals
+        uint256[1536] memory signals
     ) internal pure returns(bool) {
         // write proof
 
