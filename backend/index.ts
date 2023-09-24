@@ -47,6 +47,7 @@ async function handleNewEmails() {
 						// call proof generation
 
 						await sendAATransaction(wallet, account, polygonMumbai, parsed.text!, "proof");
+					})
 				});
 			});
 
