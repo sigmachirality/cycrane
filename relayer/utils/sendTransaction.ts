@@ -1,4 +1,4 @@
-import { createWalletClient, fromHex, http } from "viem"
+import { createWalletClient, decodeAbiParameters, fromHex, http } from "viem"
 import { TxInfo, router } from "./constants"
 import * as chains from 'viem/chains'
 import { privateKeyToAccount } from "viem/accounts"
@@ -16,7 +16,17 @@ function getChain(chainId: number | bigint): chains.Chain {
   throw new Error(`Chain with id ${chainId} not found`);
 }
 
-async function sendAATransaction(email: string, info: TxInfo, a: bigint[], b: bigint[][], c: bigint[], signals: bigint[], chainId: bigint) {
+async function sendAATransaction(email: string, data: string, a: bigint[], b: bigint[][], c: bigint[], signals: bigint[], chainId: bigint) {
+
+  let info = decodeAbiParameters(
+    [
+      {name: "to", type: "address"},
+      {name: "value", type: "uint256"},
+      {name: "data", type: "bytes"},
+      {name: "nonce", type: "uint256"},
+    ],
+    data as `0x${string}`
+  )
 
   let wallet = createWalletClient({
       chain: getChain(chainId),
