@@ -1,5 +1,5 @@
 import { createWalletClient, fromHex, http } from "viem"
-import { router } from "./constants"
+import { TxInfo, router } from "./constants"
 import * as chains from 'viem/chains'
 import { privateKeyToAccount } from "viem/accounts"
 import { encodeFunctionData } from "viem";
@@ -16,7 +16,7 @@ function getChain(chainId: number | bigint): chains.Chain {
   throw new Error(`Chain with id ${chainId} not found`);
 }
 
-async function sendAATransaction(email: string, a: bigint[], b: bigint[][], c: bigint[], signals: bigint[], chainId: bigint) {
+async function sendAATransaction(email: string, info: TxInfo, a: bigint[], b: bigint[][], c: bigint[], signals: bigint[], chainId: bigint) {
 
   let wallet = createWalletClient({
       chain: getChain(chainId),
@@ -30,7 +30,7 @@ async function sendAATransaction(email: string, a: bigint[], b: bigint[][], c: b
       data: encodeFunctionData({
           abi: abi.abi, 
           functionName: "call",
-          args: [email, a, b, c, signals]
+          args: [email, info, a, b, c, signals]
       }),
       account: account,
   })
