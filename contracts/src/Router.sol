@@ -24,7 +24,7 @@ contract Router {
 
     function call(
         string memory email, 
-        TxInfo memory tx,
+        TxInfo memory info,
         uint256[2] memory a,
         uint256[2][2] memory b,
         uint256[2] memory c,
@@ -34,7 +34,7 @@ contract Router {
         bytes32 emailHash = keccak256(abi.encodePacked(email));
         address wallet = createWalletIfNeccessary(emailHash);
 
-        bytes memory returnData = BaseWallet(wallet).singleCall(tx, a,b,c, signals);
+        bytes memory returnData = BaseWallet(wallet).singleCall(info, a,b,c, signals);
 
         return returnData;
     }
