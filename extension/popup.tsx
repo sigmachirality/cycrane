@@ -1,30 +1,32 @@
-import { useState } from "react"
+import React, { useState } from "react"
+import { ThemeProvider } from 'styled-components'
+import { 
+  ThorinGlobalStyles,
+  Button,
+  LockSVG,
+  darkTheme
+ } from '@ensdomains/thorin'
 
-function IndexPopup() {
-  const [data, setData] = useState("")
 
-  return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        width: 500,
-        padding: 16
-      }}>
-      <h2>
-        Welcome to your
-        <a href="https://www.plasmo.com" target="_blank">
-          {" "}
-          Plasmo
-        </a>{" "}
-        Extension!
-      </h2>
-      <input onChange={(e) => setData(e.target.value)} value={data} />
-      <a href="https://docs.plasmo.com" target="_blank">
-        View Docs
-      </a>
-    </div>
-  )
+interface IThorinProps {
+  children: React.ReactNode
 }
 
-export default IndexPopup
+function Thorin({ children }: IThorinProps) {
+  return <ThemeProvider theme={darkTheme}>
+    <ThorinGlobalStyles />
+    {children}
+  </ThemeProvider>
+}
+
+export default function IndexPopup() {
+  return (
+    <Thorin>
+      <div style={{ width: '180px' }}>
+        <Button prefix={<LockSVG />} variant="primary">
+          Connect Wallet
+        </Button>
+      </div>
+    </Thorin >
+  )
+}
