@@ -1,10 +1,7 @@
-import { Core } from '@walletconnect/core'
-import { Web3Wallet } from '@walletconnect/web3wallet'
+import { Web3Wallet } from "@walletconnect/web3wallet"
+import { Core } from "@walletconnect/core"
 import { buildApprovedNamespaces } from '@walletconnect/utils'
 
-export {}
-
-console.log('background.ts')
 
 const core = new Core({
   projectId: process.env.PLASMO_PUBLIC_PROJECT_ID

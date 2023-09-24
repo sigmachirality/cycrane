@@ -23,7 +23,7 @@ export default function IndexPopup() {
   return (
     <Thorin>
       <div style={{ width: '180px' }}>
-        <Button prefix={<LockSVG />} variant="primary">
+        <Button prefix={<LockSVG />} variant="primary" onClick={() => console.log("test")}>
           Connect Wallet
         </Button>
       </div>
