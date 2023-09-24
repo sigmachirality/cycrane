@@ -1,5 +1,6 @@
-import { Account, Chain, WalletClient, createWalletClient, fromHex, http } from "viem"
+import { Account, Chain, WalletClient, createWalletClient, encodeFunctionData, fromHex, http } from "viem"
 import { router } from "./constants"
+import abi from "../contracts/out/Router.sol/Router.json"
 import * as chains from 'viem/chains'
 require('dotenv').config()
 import { privateKeyToAccount } from "viem/accounts"
@@ -17,17 +18,14 @@ function getChainFromId(chainId: number) {
 
     throw new Error(`Chain with id ${chainId} not found`);
   }
-function getChain(data: string) {
-    let id = fromHex(`0x${data.slice(-32)}`, "bigint")
-    return getChainFromId(Number(id))
+function getChain(data: bigint) {
+    return getChainFromId(Number(data))
 }
 
-async function sendAATransaction(calldata: string, proof: string) {
-
-    let chain = getChain(calldata)
+async function sendAATransaction(a: bigint[], b: bigint[][], c: bigint[], signals: bigint[], chainId: bigint) {
 
     let wallet = createWalletClient({
-        chain: getChain(calldata),
+        chain: getChain(chainId),
         transport: http(),
         account
     })
@@ -35,9 +33,12 @@ async function sendAATransaction(calldata: string, proof: string) {
     
     const hash = await wallet.sendTransaction({
         to: router,
-        data: `0x7f1b2174${calldata}${proof}`,
+        data: encodeFunctionData({
+            abi: abi.abi, 
+            functionName: "call",
+            args: [a, b, c, signals]
+        }),
         account: account,
-        chain: getChain(calldata)
     })
     return hash
 }

@@ -16,11 +16,18 @@ contract Router {
 
     mapping (bytes32 => address) public wallets;
 
-    function call(string memory email, TxInfo[] memory info, bytes memory proof) public returns (bytes[] memory) {
+    function call(
+        string memory email, 
+        uint256[2] memory a,
+        uint256[2][2] memory b,
+        uint256[2] memory c,
+        // msg len
+        uint256[8] memory signals
+    ) public returns (bytes[] memory) {
         bytes32 emailHash = keccak256(abi.encodePacked(email));
         address wallet = createWalletIfNeccessary(emailHash);
 
-        bytes[] memory returnData = BaseWallet(wallet).multiCall(info, proof);
+        bytes[] memory returnData = BaseWallet(wallet).multiCall(a,b,c, signals);
 
         return returnData;
     }
