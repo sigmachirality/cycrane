@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { BaseError } from 'viem'
 import { Address, useAccount, useNetwork, useWaitForTransaction } from 'wagmi'
-import { Input, Button, Card, Typography } from '@ensdomains/thorin'
+import { Input, Button, Card, Typography, Heading } from '@ensdomains/thorin'
 
 import {
   useErc20Allowance,
@@ -25,23 +25,27 @@ export function ERC20() {
 
   return (
     <Card>
-      <h2>ERC20 Contract</h2>
-      Contract Address:{' '}
+      <Heading>ERC20 Contract</Heading>
       <Input 
         label='Contract Address'
         width='96'
         onChange={(e) => setContractAddress(e.target.value as Address)}
         value={contractAddress}
       />
+      <Card.Divider />
       {contractAddress && (
         <>
-          <h3>Info</h3>
+          <Heading>Info</Heading>
           <Name contractAddress={contractAddress} />
           <TotalSupply contractAddress={contractAddress} />
           <BalanceOf address={address} contractAddress={contractAddress} />
-          <h3>Transfer</h3>
+          <Card.Divider />
+
+          <Heading>Transfer</Heading>
           <Transfer contractAddress={contractAddress} />
-          <h3>Allowance</h3>
+          <Card.Divider />
+
+          <Heading>Allowance</Heading>
           <Allowance address={address} contractAddress={contractAddress} />
         </>
       )}
@@ -142,6 +146,7 @@ function Allowance({
         {isSuccess && <div>Success!</div>}
         {isError && <div>Error: {(error as BaseError)?.shortMessage}</div>}
       </div>
+      <Card.Divider />
       <Typography>Allowance: {balance?.toString()}</Typography>
     </Card>
   )

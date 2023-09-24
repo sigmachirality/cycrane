@@ -12,7 +12,7 @@ export function Connect() {
 
   return (
     <div>
-      <Card style={{ flexDirection: "row"}}>
+      <Card style={{ flexDirection: "row", justifyContent: 'center'}}>
         {isConnected && (
           <Button onClick={() => disconnect()} width='64'>
             Disconnect from {connector?.name}
