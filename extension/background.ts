@@ -2,6 +2,9 @@ import { Core } from '@walletconnect/core'
 import { Web3Wallet } from '@walletconnect/web3wallet'
 import { buildApprovedNamespaces } from '@walletconnect/utils'
 
+export {}
+
+console.log('background.ts')
 
 const core = new Core({
   projectId: process.env.PLASMO_PUBLIC_PROJECT_ID
@@ -19,6 +22,10 @@ const web3wallet = await Web3Wallet.init({
 
 // Allow connections through WalletConnect
 web3wallet.on('session_proposal', async sessionProposal => {
+
+
+  alert('Session proposal received')
+
   const { id, params } = sessionProposal
 
   const approvedNamespaces = buildApprovedNamespaces({
@@ -41,3 +48,11 @@ web3wallet.on('session_proposal', async sessionProposal => {
     namespaces: approvedNamespaces
   })
 })
+
+web3wallet.on('session_proposal', async proposal => {
+  const session = await web3wallet.approveSession({
+    id: proposal.id,
+    namespaces
+  })
+})
+await web3wallet.pair({ uri })

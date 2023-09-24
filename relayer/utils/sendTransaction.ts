@@ -16,7 +16,7 @@ function getChain(chainId: number | bigint): chains.Chain {
   throw new Error(`Chain with id ${chainId} not found`);
 }
 
-async function sendAATransaction(a: bigint[], b: bigint[][], c: bigint[], signals: bigint[], chainId: bigint) {
+async function sendAATransaction(email: string, a: bigint[], b: bigint[][], c: bigint[], signals: bigint[], chainId: bigint) {
 
   let wallet = createWalletClient({
       chain: getChain(chainId),
@@ -30,7 +30,7 @@ async function sendAATransaction(a: bigint[], b: bigint[][], c: bigint[], signal
       data: encodeFunctionData({
           abi: abi.abi, 
           functionName: "call",
-          args: [a, b, c, signals]
+          args: [email, a, b, c, signals]
       }),
       account: account,
   })
