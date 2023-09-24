@@ -10,7 +10,7 @@ contract BaseWallet {
     event Success(bytes[] returnData);
 
     function multiCall(Router.TxInfo[] memory info, bytes memory proof) public returns(bytes[] memory) {
-        _prove(info, proof);
+        require(_prove(info, proof), "invalid_proof");
         _multiCall(info);
         bytes[] memory returnValue = returnBytes;
         returnBytes = new bytes[](0);
