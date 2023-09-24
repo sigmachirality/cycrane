@@ -2,6 +2,7 @@
 
 import { BaseError } from 'viem'
 import { useAccount, useConnect, useDisconnect } from 'wagmi'
+import { Card, Button } from '@ensdomains/thorin'
 
 export function Connect() {
   const { connector, isConnected } = useAccount()
@@ -11,22 +12,22 @@ export function Connect() {
 
   return (
     <div>
-      <div>
+      <Card style={{ flexDirection: "row"}}>
         {isConnected && (
-          <button onClick={() => disconnect()}>
+          <Button onClick={() => disconnect()} width='64'>
             Disconnect from {connector?.name}
-          </button>
+          </Button>
         )}
 
         {connectors
           .filter((x) => x.ready && x.id !== connector?.id)
           .map((x) => (
-            <button key={x.id} onClick={() => connect({ connector: x })}>
+            <Button key={x.id} onClick={() => connect({ connector: x })} width='64'>
               {x.name}
               {isLoading && x.id === pendingConnector?.id && ' (connecting)'}
-            </button>
+            </Button>
           ))}
-      </div>
+      </Card>
 
       {error && <div>{(error as BaseError).shortMessage}</div>}
     </div>

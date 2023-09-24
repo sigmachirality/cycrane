@@ -1,23 +1,33 @@
+"use client"
 import { Account } from '../components/Account'
 import { Connect } from '../components/Connect'
 import { Connected } from '../components/Connected'
-import { MintNFT } from '../components/MintNFT'
+import { ERC20 } from '../components/ERC20'
+import { Heading } from '@ensdomains/thorin'
 import { NetworkSwitcher } from '../components/NetworkSwitcher'
+import { ThemeProvider } from 'styled-components'
+import { ThorinGlobalStyles, lightTheme, Card } from '@ensdomains/thorin'
 
 export function Page() {
   return (
     <>
-      <h1>wagmi + Next.js + @wagmi/cli (ABI)</h1>
+      <ThemeProvider theme={lightTheme}>
+      <ThorinGlobalStyles />
+      <Card>
+        <Heading>Test ERC20 Txs</Heading>
 
       <Connect />
 
       <Connected>
         <Account />
         <hr />
-        <MintNFT />
+        <ERC20 />
         <hr />
         <NetworkSwitcher />
       </Connected>
+      </Card>
+      </ThemeProvider>
+
     </>
   )
 }

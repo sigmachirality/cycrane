@@ -1,5 +1,5 @@
 {
-  "name": "next-connectkit",
+  "name": "dapp",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -10,10 +10,13 @@
     "wagmi": "wagmi generate"
   },
   "dependencies": {
+    "@ensdomains/thorin": "^0.6.44",
     "@wagmi/cli": "^1.0.0",
     "next": "^13.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-transition-state": "^2.1.1",
+    "styled-components": "^6.0.8",
     "viem": "~0.3.36",
     "wagmi": "^1.0.6"
   },

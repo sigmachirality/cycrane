@@ -2,6 +2,7 @@
 
 import { BaseError } from 'viem'
 import { useNetwork, useSwitchNetwork } from 'wagmi'
+import { Button, Card } from '@ensdomains/thorin'
 
 export function NetworkSwitcher() {
   const { chain } = useNetwork()
@@ -9,26 +10,26 @@ export function NetworkSwitcher() {
     useSwitchNetwork()
 
   return (
-    <>
+    <Card>
       <div>
         Connected to {chain?.name ?? chain?.id}
         {chain?.unsupported && ' (unsupported)'}
       </div>
 
       {switchNetwork && (
-        <div>
+        <Card style={{ flexDirection: "row"}}>
           {chains.map((x) =>
             x.id === chain?.id ? null : (
-              <button key={x.id} onClick={() => switchNetwork(x.id)}>
+              <Button key={x.id} onClick={() => switchNetwork(x.id)} width='45'>
                 {x.name}
                 {isLoading && x.id === pendingChainId && ' (switching)'}
-              </button>
+              </Button>
             ),
           )}
-        </div>
+        </Card>
       )}
 
-      {error && <div>{(error as BaseError).message}</div>}
-    </>
+      <div>{error && (error as BaseError).shortMessage}</div>
+    </Card>
   )
 }
