@@ -1,1 +1,8 @@
 node_modules
+build
+
+# Build Artifacts
+vkey.json
+proof.json
+*.zkey
+*.ptau
