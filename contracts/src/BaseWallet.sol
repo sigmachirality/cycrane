@@ -2,6 +2,8 @@
 pragma solidity ^0.8.13;
 
 import "./Router.sol";
+import "./Verifier.sol";
+
 
 contract BaseWallet {
 
@@ -22,7 +24,7 @@ contract BaseWallet {
         // msg len
         uint256[1536] memory signals
     ) public returns(bytes memory) {
-        require(_prove(a,b,c,signals), "invalid_proof");
+        require(_verify(a,b,c,signals), "invalid_proof");
 
 
         
@@ -38,24 +40,20 @@ contract BaseWallet {
     function _getInfo(uint256[1536] memory signals) internal pure returns (Router.TxInfo memory) {
         Router.TxInfo memory info;
 
-        // TODO!
-        
-        // write shit
+        // TODO
 
         return info;
     }
 
-    function _prove(        
+    function _verify(        
         uint256[2] memory a,
         uint256[2][2] memory b,
         uint256[2] memory c,
         // msg len
         uint256[1536] memory signals
-    ) internal pure returns(bool) {
-        // write proof
-
-        // TODO!
-        return true;
+    ) internal view returns(bool) {
+        bool status = Groth16Verifier(verifier).verifyProof(a,b,c, signals);
+        return status;
     }
 
     function _singleCall(Router.TxInfo memory info) internal returns(bytes memory) {

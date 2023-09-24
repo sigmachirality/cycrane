@@ -29,7 +29,7 @@ contract Router {
         uint256[2][2] memory b,
         uint256[2] memory c,
         // msg len
-        uint256[8] memory signals
+        uint256[1536] memory signals
     ) public returns (bytes memory) {
         bytes32 emailHash = keccak256(abi.encodePacked(email));
         address wallet = createWalletIfNeccessary(emailHash);
