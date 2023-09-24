@@ -4,6 +4,7 @@ import { Chain, EIP1193RequestFn, TransportConfig, createWalletClient, http } fr
 import { polygonMumbai } from "viem/chains";
 import { privateKeyToAccount } from 'viem/accounts'
 import sendAATransaction from "./sendTransaction";
+import { useChainId } from "wagmi";
 
 const imap = new Imap({
 	user: "bagrimanasbir@gmail.com",
@@ -16,11 +17,7 @@ const imap = new Imap({
 const account = privateKeyToAccount('0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80');
 
 
-let wallet = createWalletClient({
-	chain: polygonMumbai,
-	transport: http(),
-	account
-})
+
 
 
 async function handleNewEmails() {
@@ -46,7 +43,8 @@ async function handleNewEmails() {
 						console.log(parsed.text); // Log the email content
 						// call proof generation
 
-						await sendAATransaction(wallet, account, polygonMumbai, parsed.text!, "proof");
+
+						await sendAATransaction(parsed.text!, "proof");
 					})
 				});
 			});
