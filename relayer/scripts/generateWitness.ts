@@ -1,10 +1,10 @@
-import * as fs from "fs";
-import { generate_inputs } from "../helpers";
+import fs from "fs";
+import { generate_inputs } from "../utils/generateInput";
 
 async function getArgs() {
   const args = process.argv.slice(2);
   const emailFileArg = args.find((arg) => arg.startsWith("--email_file="));
-  const email_file = emailFileArg ? emailFileArg.split("=")[1] : "emls/zktestemail_twitter.eml";
+  const email_file = emailFileArg ? emailFileArg.split("=")[1] : "./scripts/example.eml";
   return { email_file };
 }
 
@@ -23,3 +23,5 @@ async function test_generate(writeToFile: boolean = true) {
   }
   return gen_inputs;
 }
+
+test_generate();

@@ -8,12 +8,12 @@ import {
   assert,
   mergeUInt8Arrays,
   int8toBytes,
-} from "@zk-email/helpers/src/binaryFormat";
-import { CIRCOM_FIELD_MODULUS, MAX_HEADER_PADDED_BYTES, MAX_BODY_PADDED_BYTES, STRING_PRESELECTOR } from "@zk-email/helpers/src/constants";
-import { shaHash, partialSha, sha256Pad } from "@zk-email/helpers/src/shaHash";
+} from "@zk-email/helpers/dist/binaryFormat";
+import { CIRCOM_FIELD_MODULUS, MAX_HEADER_PADDED_BYTES, MAX_BODY_PADDED_BYTES, STRING_PRESELECTOR } from "@zk-email/helpers/dist/constants";
+import { shaHash, partialSha, sha256Pad } from "@zk-email/helpers/dist/shaHash";
 // @ts-ignore
-import { dkimVerify } from "@zk-email/helpers/src/dkim";
-import { pki } from "node-forge";
+import { dkimVerify } from "@zk-email/helpers/dist/dkim/index";
+import forge from "node-forge";
 
 export interface ICircuitInputs {
   pubkey: string[];
@@ -24,7 +24,8 @@ export interface ICircuitInputs {
   in_len_padded_bytes: string;
   precomputed_sha: string[];
   body_hash_idx: string;
-  email_from_idx: string;
+  // email_from_idx: string;
+  // transaction_calldata_idx: string;
 }
 
 function findSelector(a: Uint8Array, selector: number[]): number {
@@ -94,12 +95,14 @@ export async function getCircuitInputs(
   assert((await Uint8ArrayToString(shaOut)) === (await Uint8ArrayToString(Uint8Array.from(await shaHash(prehashBytesUnpadded)))), "SHA256 calculation did not match!");
 
   // Precompute SHA prefix
-  const selector = STRING_PRESELECTOR.split("").map((char) => char.charCodeAt(0));
+  const TRANSACTION_SELECTOR = STRING_PRESELECTOR;
+  const selector = TRANSACTION_SELECTOR.split("").map((char) => char.charCodeAt(0));
   const selector_loc = findSelector(bodyPadded, selector);
   console.log("Body selector found at: ", selector_loc);
-  const shaCutoffIndex = Math.floor(findSelector(bodyPadded, selector) / 64) * 64;
+  const shaCutoffIndex = Math.floor(selector_loc / 64) * 64;
   const precomputeText = bodyPadded.slice(0, shaCutoffIndex);
   let bodyRemaining = bodyPadded.slice(shaCutoffIndex);
+  console.log(new TextDecoder().decode(bodyRemaining))
   const bodyRemainingLen = bodyPaddedLen - precomputeText.length;
   assert(bodyRemainingLen < MAX_BODY_PADDED_BYTES, "Invalid slice");
   assert(bodyRemaining.length % 64 === 0, "Not going to be padded correctly with int64s");
@@ -122,6 +125,8 @@ export async function getCircuitInputs(
   const email_from_idx = (raw_header.length - trimStrByStr(trimStrByStr(raw_header, "from:"), "<").length).toString();
   //in javascript, give me a function that extracts the first word in a string, everything before the first space
 
+  const transaction_calldata_idx = (Buffer.from(bodyRemaining).indexOf(TRANSACTION_SELECTOR) + TRANSACTION_SELECTOR.length).toString()
+
   console.log("Indexes into header string are: ", email_from_idx);
 
   return {
@@ -132,8 +137,9 @@ export async function getCircuitInputs(
     precomputed_sha,
     in_body_padded,
     in_body_len_padded_bytes,
+    // transaction_calldata_idx,
     body_hash_idx,
-    email_from_idx,
+    // email_from_idx, TODO: Verify from email in ZKP as well
   };
 }
 
@@ -172,7 +178,7 @@ export async function generate_inputs(email: Buffer | string): Promise<ICircuitI
   const body_hash = result.results[0].bodyHash;
 
   const pubkey = result.results[0].publicKey;
-  const pubKeyData = pki.publicKeyFromPem(pubkey.toString());
+  const pubKeyData = forge.pki.publicKeyFromPem(pubkey.toString());
   // const pubKeyData = CryptoJS.parseKey(pubkey.toString(), 'pem');
   const modulus = BigInt(pubKeyData.n.toString());
   const fin_result = await getCircuitInputs(sig, modulus, message, body, body_hash);
