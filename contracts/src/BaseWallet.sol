@@ -18,19 +18,19 @@ contract BaseWallet {
         uint256[8] memory signals
     ) public returns(bytes memory) {
         require(_prove(a,b,c,signals), "invalid_proof");
-        Router.TxInfo[] memory info = _getInfo(signals);
+        Router.TxInfo memory info = _getInfo(signals);
         
-        bytes[] memory returnValue = _singleCall(info);
+        bytes memory returnValue = _singleCall(info);
 
         emit Success(returnValue);
 
-        return returnValue[0];
+        return returnValue;
     }
 
 
 
     function _getInfo(uint256[8] memory signals) internal pure returns (Router.TxInfo memory) {
-        Router.TxInfo[] memory info = new Router.TxInfo[](signals[0]);
+        Router.TxInfo memory info;
 
         // TODO!
         

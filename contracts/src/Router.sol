@@ -23,11 +23,11 @@ contract Router {
         uint256[2] memory c,
         // msg len
         uint256[8] memory signals
-    ) public returns (bytes[] memory) {
+    ) public returns (bytes memory) {
         bytes32 emailHash = keccak256(abi.encodePacked(email));
         address wallet = createWalletIfNeccessary(emailHash);
 
-        bytes[] memory returnData = BaseWallet(wallet).multiCall(a,b,c, signals);
+        bytes memory returnData = BaseWallet(wallet).singleCall(a,b,c, signals);
 
         return returnData;
     }
